@@ -11,6 +11,7 @@ func TestHello(t *testing.T) {
 
 		assertStrEqual(t, got, want)
 	})
+
 	t.Run("say 'hello, world' when name is empty", func(t *testing.T) {
 
 		got := Hello("", "")
@@ -18,15 +19,24 @@ func TestHello(t *testing.T) {
 
 		assertStrEqual(t, got, want)
 	})
+
 	t.Run("hello in arabic", func(t *testing.T) {
 		got := Hello("النور", "arabic")
 		want := "مرحبا, النور"
 
 		assertStrEqual(t, got, want)
 	})
+
 	t.Run("hello in french", func(t *testing.T) {
 		got := Hello("noor", "french")
 		want := "Bonjour, noor"
+
+		assertStrEqual(t, got, want)
+	})
+
+	t.Run("hello in spanish", func(t *testing.T) {
+		got := Hello("noor", "spanish")
+		want := "Hola, noor"
 
 		assertStrEqual(t, got, want)
 	})
