@@ -2,6 +2,7 @@ package main
 
 const englishGreetingPrefix = "Hello, "
 const arabicGreetingPrefix = "مرحبا, "
+const frenchGreetingPrefix = "Bonjour, "
 
 func Hello(name string, language string) string {
 	if language == "" {
@@ -13,6 +14,9 @@ func Hello(name string, language string) string {
 
 	if language == "arabic" {
 		return arabicGreetingPrefix + name
+	}
+	if language == "french" {
+		return frenchGreetingPrefix + name
 	}
 	return englishGreetingPrefix + name
 }

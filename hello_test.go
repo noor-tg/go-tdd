@@ -24,6 +24,13 @@ func TestHello(t *testing.T) {
 
 		assertStrEqual(t, got, want)
 	})
+	t.Run("hello in french", func(t *testing.T) {
+		got := Hello("noor", "french")
+		want := "Bonjour, noor"
+
+		assertStrEqual(t, got, want)
+	})
+
 }
 
 func assertStrEqual(t testing.TB, got string, want string) {
