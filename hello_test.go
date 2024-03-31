@@ -1,18 +1,26 @@
 package main
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestHello(t *testing.T) {
 	t.Run("hello to people", func(t *testing.T) {
-		got := Hello("noor")
+		got := Hello("noor", "")
 		want := "Hello, noor"
 
 		assertStrEqual(t, got, want)
 	})
 	t.Run("say 'hello, world' when name is empty", func(t *testing.T) {
 
-		got := Hello("")
+		got := Hello("", "")
 		want := "Hello, World"
+
+		assertStrEqual(t, got, want)
+	})
+	t.Run("hello in arabic", func(t *testing.T) {
+		got := Hello("النور", "arabic")
+		want := "مرحبا, النور"
 
 		assertStrEqual(t, got, want)
 	})

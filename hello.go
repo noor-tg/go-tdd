@@ -1,10 +1,18 @@
 package main
 
-const greetingPrefix = "Hello, "
+const englishGreetingPrefix = "Hello, "
+const arabicGreetingPrefix = "مرحبا, "
 
-func Hello(name string) string {
+func Hello(name string, language string) string {
+	if language == "" {
+		language = "english"
+	}
 	if name == "" {
 		name = "World"
 	}
-	return greetingPrefix + name
+
+	if language == "arabic" {
+		return arabicGreetingPrefix + name
+	}
+	return englishGreetingPrefix + name
 }
