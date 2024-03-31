@@ -17,7 +17,6 @@ func Hello(name string, language string) string {
 	switch language {
 	case "arabic":
 		prefix = arabicGreetingPrefix
-
 	case "french":
 		prefix = frenchGreetingPrefix
 	case "spanish":
