@@ -1,8 +1,10 @@
 package iterations
 
+const repeatCount = 5
+
 func Repeat(a string) string {
 	var str string
-	for range 5 {
+	for range repeatCount {
 		str += a
 	}
 	return str
