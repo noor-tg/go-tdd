@@ -22,3 +22,10 @@ func TestRepeat(t *testing.T) {
 		testza.AssertEqual(t, expected, out)
 	})
 }
+
+func BenchmarkRepeat(b *testing.B) {
+	for range b.N {
+		Repeat("a")
+	}
+
+}
