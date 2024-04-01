@@ -1,6 +1,7 @@
 package iterations
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/MarvinJWendt/testza"
@@ -28,4 +29,11 @@ func BenchmarkRepeat(b *testing.B) {
 		Repeat("a")
 	}
 
+}
+
+func ExampleRepeat() {
+	out := Repeat("c")
+
+	fmt.Println(out)
+	// Output: ccccc
 }
