@@ -2,6 +2,8 @@ package main
 
 import (
 	"testing"
+
+	"github.com/MarvinJWendt/testza"
 )
 
 func TestHello(t *testing.T) {
@@ -9,7 +11,7 @@ func TestHello(t *testing.T) {
 		got := Hello("noor", "")
 		want := "Hello, noor"
 
-		assertStrEqual(t, got, want)
+		assertCorrectMessage(t, got, want)
 	})
 
 	t.Run("say 'hello, world' when name is empty", func(t *testing.T) {
@@ -17,35 +19,39 @@ func TestHello(t *testing.T) {
 		got := Hello("", "")
 		want := "Hello, World"
 
-		assertStrEqual(t, got, want)
+		assertCorrectMessage(t, got, want)
 	})
 
 	t.Run("hello in arabic", func(t *testing.T) {
 		got := Hello("النور", "arabic")
 		want := "مرحبا, النور"
 
-		assertStrEqual(t, got, want)
+		assertCorrectMessage(t, got, want)
 	})
 
 	t.Run("hello in french", func(t *testing.T) {
 		got := Hello("noor", "french")
 		want := "Bonjour, noor"
 
-		assertStrEqual(t, got, want)
+		assertCorrectMessage(t, got, want)
 	})
 
 	t.Run("hello in spanish", func(t *testing.T) {
 		got := Hello("noor", "spanish")
 		want := "Hola, noor"
 
-		assertStrEqual(t, got, want)
+		assertCorrectMessage(t, got, want)
 	})
 
 }
+func init() {
+	testza.SetShowStartupMessage(false) // Disable the startup message
+}
 
-func assertStrEqual(t testing.TB, got string, want string) {
+func assertCorrectMessage(t testing.TB, got string, want string) {
 	t.Helper()
 	if got != want {
-		t.Errorf("got %q want %q", got, want)
+		testza.AssertEqual(t, want, got)
+		// t.Errorf("got %q want %q", got, want)
 	}
 }
