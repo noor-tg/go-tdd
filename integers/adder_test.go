@@ -1,6 +1,7 @@
 package integers
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/MarvinJWendt/testza"
@@ -13,4 +14,14 @@ func TestAdder(t *testing.T) {
 
 	testza.AssertEqual(t, sum, expected)
 
+}
+
+func ExampleAdd() {
+	sum := Add(2, 2)
+	fmt.Println(sum)
+	// Output: 4
+}
+
+func init() {
+	testza.SetShowStartupMessage(false)
 }
