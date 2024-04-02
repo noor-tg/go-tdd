@@ -1,9 +1,8 @@
 package collections
 
 import (
+	"reflect"
 	"testing"
-
-	"github.com/MarvinJWendt/testza"
 )
 
 func TestSum(t *testing.T) {
@@ -13,8 +12,9 @@ func TestSum(t *testing.T) {
 
 		expected := 15
 
-		testza.AssertEqual(t, expected, sum)
-
+		if !reflect.DeepEqual(sum, expected) {
+			t.Errorf("got %v want %v", sum, expected)
+		}
 	})
 
 	t.Run("sum total of with deffient input", func(t *testing.T) {
@@ -23,7 +23,9 @@ func TestSum(t *testing.T) {
 
 		expected := 10
 
-		testza.AssertEqual(t, expected, sum)
+		if !reflect.DeepEqual(sum, expected) {
+			t.Errorf("got %v want %v", sum, expected)
+		}
 	})
 }
 
@@ -31,20 +33,27 @@ func TestSumAll(t *testing.T) {
 	actual := SumAll([]int{1, 2}, []int{3, 4}, []int{5, 6})
 	expected := []int{3, 7, 11}
 
-	testza.AssertEqual(t, expected, actual)
-}
-
-func init() {
-	testza.SetShowStartupMessage(false)
+	if !reflect.DeepEqual(actual, expected) {
+		t.Errorf("got %v want %v", actual, expected)
+	}
 }
 
 func TestSumAllTails(t *testing.T) {
+
+	checkSum := func(t testing.TB, actual, expected []int) {
+		t.Helper()
+		if !reflect.DeepEqual(actual, expected) {
+			t.Errorf("got %v want %v", actual, expected)
+		}
+	}
+
 	t.Run("sum tails of slices correctly", func(t *testing.T) {
 		actual := SumAllTails([]int{1, 2, 3}, []int{4, 5, 6})
 
 		expected := []int{5, 11}
 
-		testza.AssertEqual(t, expected, actual)
+		checkSum(t, actual, expected)
+
 	})
 
 	t.Run("sum tails of slices with one empty", func(t *testing.T) {
@@ -52,7 +61,7 @@ func TestSumAllTails(t *testing.T) {
 
 		expected := []int{0, 11}
 
-		testza.AssertEqual(t, expected, actual)
+		checkSum(t, actual, expected)
 	})
 }
 
@@ -61,5 +70,7 @@ func TestSumAllHeadNick(t *testing.T) {
 
 	expected := []int{3, 9}
 
-	testza.AssertEqual(t, expected, actual)
+	if !reflect.DeepEqual(actual, expected) {
+		t.Errorf("got %v want %v", actual, expected)
+	}
 }
