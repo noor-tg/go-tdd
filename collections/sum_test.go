@@ -7,7 +7,6 @@ import (
 )
 
 func TestSum(t *testing.T) {
-
 	t.Run("sum total to 15", func(t *testing.T) {
 		input := []int{1, 2, 3, 4, 5}
 		sum := Sum(input)
@@ -29,14 +28,28 @@ func TestSum(t *testing.T) {
 }
 
 func TestSumAll(t *testing.T) {
-
 	actual := SumAll([]int{1, 2}, []int{3, 4}, []int{5, 6})
 	expected := []int{3, 7, 11}
 
 	testza.AssertEqual(t, expected, actual)
-
 }
 
 func init() {
 	testza.SetShowStartupMessage(false)
+}
+
+func TestSumAllTails(t *testing.T) {
+	actual := SumAllTails([]int{1, 2, 3}, []int{4, 5, 6})
+
+	expected := []int{5, 11}
+
+	testza.AssertEqual(t, expected, actual)
+}
+
+func TestSumAllHeadNick(t *testing.T) {
+	actual := SumAllHeadNick([]int{1, 2, 3}, []int{4, 5, 6})
+
+	expected := []int{3, 9}
+
+	testza.AssertEqual(t, expected, actual)
 }

@@ -20,3 +20,27 @@ func SumAll(input ...[]int) []int {
 
 	return sums
 }
+
+func SumAllTails(input ...[]int) []int {
+	// init empty slice
+	var sums []int
+	for _, collection := range input {
+		tail := collection[1:]
+		// make new slices from old one with item
+		sums = append(sums, Sum(tail))
+	}
+
+	return sums
+}
+
+func SumAllHeadNick(input ...[]int) []int {
+	// init empty slice
+	var sums []int
+	for _, collection := range input {
+		head := collection[0:2]
+		// make new slices from old one with item
+		sums = append(sums, Sum(head))
+	}
+
+	return sums
+}
