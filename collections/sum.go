@@ -25,7 +25,10 @@ func SumAllTails(input ...[]int) []int {
 	// init empty slice
 	var sums []int
 	for _, collection := range input {
-		tail := collection[1:]
+		var tail []int
+		if len(collection) > 0 {
+			tail = collection[1:]
+		}
 		// make new slices from old one with item
 		sums = append(sums, Sum(tail))
 	}

@@ -39,11 +39,21 @@ func init() {
 }
 
 func TestSumAllTails(t *testing.T) {
-	actual := SumAllTails([]int{1, 2, 3}, []int{4, 5, 6})
+	t.Run("sum tails of slices correctly", func(t *testing.T) {
+		actual := SumAllTails([]int{1, 2, 3}, []int{4, 5, 6})
 
-	expected := []int{5, 11}
+		expected := []int{5, 11}
 
-	testza.AssertEqual(t, expected, actual)
+		testza.AssertEqual(t, expected, actual)
+	})
+
+	t.Run("sum tails of slices with one empty", func(t *testing.T) {
+		actual := SumAllTails([]int{}, []int{4, 5, 6})
+
+		expected := []int{0, 11}
+
+		testza.AssertEqual(t, expected, actual)
+	})
 }
 
 func TestSumAllHeadNick(t *testing.T) {
