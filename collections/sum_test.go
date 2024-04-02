@@ -9,7 +9,7 @@ import (
 func TestSum(t *testing.T) {
 
 	t.Run("sum total to 15", func(t *testing.T) {
-		input := [5]int{1, 2, 3, 4, 5}
+		input := []int{1, 2, 3, 4, 5}
 		sum := Sum(input)
 
 		expected := 15
@@ -18,8 +18,8 @@ func TestSum(t *testing.T) {
 
 	})
 
-	t.Run("sum total to 10", func(t *testing.T) {
-		input := [5]int{1, 2, 3, 4, 0}
+	t.Run("sum total of with deffient input", func(t *testing.T) {
+		input := []int{1, 2, 3, 4}
 		sum := Sum(input)
 
 		expected := 10

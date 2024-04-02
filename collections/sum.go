@@ -1,9 +1,9 @@
 package collections
 
-func Sum(input [5]int) int {
+func Sum(input []int) int {
 	total := 0
-	for i := 0; i < 5; i++ {
-		total += input[i]
+	for _, number := range input {
+		total += number
 	}
 	return total
 }
