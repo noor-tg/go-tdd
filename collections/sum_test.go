@@ -28,6 +28,15 @@ func TestSum(t *testing.T) {
 	})
 }
 
+func TestSumAll(t *testing.T) {
+
+	actual := SumAll([]int{1, 2}, []int{3, 4}, []int{5, 6})
+	expected := []int{3, 7, 11}
+
+	testza.AssertEqual(t, expected, actual)
+
+}
+
 func init() {
 	testza.SetShowStartupMessage(false)
 }
