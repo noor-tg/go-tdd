@@ -27,6 +27,18 @@ func TestWallet(t *testing.T) {
 		wallet.Withdraw(Bitcoin(5))
 
 		assertBalance(t, wallet, Bitcoin(15))
+
+	})
+
+	t.Run("withdraw to less than 0 show error", func(t *testing.T) {
+		wallet := Wallet{balance: 20}
+		err := wallet.Withdraw(Bitcoin(45))
+
+		// assertBalance(t, wallet, Bitcoin(15))
+
+		if err == nil {
+			t.Error("should recieve error")
+		}
 	})
 
 }
