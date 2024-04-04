@@ -21,6 +21,16 @@ type Shape interface {
 }
 
 func TestArea(t *testing.T) {
+	type Sample struct {
+		shape Shape
+		want  float64
+	}
+	// slice of struct
+	// contains shape and want
+	areaTests := []Sample{ // the test data
+		{Rectangle{12, 6}, 72.0},
+		{Circle{10}, 314.1592653589793},
+	}
 	checkArea := func(t testing.TB, shape Shape, want float64) {
 		t.Helper()
 		got := shape.Area()
@@ -30,13 +40,9 @@ func TestArea(t *testing.T) {
 		}
 	}
 
-	t.Run("calc area for rectangle", func(t *testing.T) {
-		shape := Rectangle{10.0, 10.0}
-		checkArea(t, shape, 100.0)
-	})
-
-	t.Run("calc area for circle", func(t *testing.T) {
-		shape := Circle{10.0}
-		checkArea(t, shape, 314.1592653589793)
-	})
+	// iterate over test values
+	for _, tt := range areaTests {
+		// check for area
+		checkArea(t, tt.shape, tt.want)
+	}
 }
