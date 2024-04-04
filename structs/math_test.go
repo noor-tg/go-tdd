@@ -30,7 +30,7 @@ func TestArea(t *testing.T) {
 	areaTests := []Sample{ // the test data
 		{Rectangle{12, 6}, 72.0},
 		{Circle{10}, 314.1592653589793},
-		{Triangle{12, 6}, 30.0},
+		{Triangle{12, 6}, 36.0},
 	}
 	checkArea := func(t testing.TB, shape Shape, want float64) {
 		t.Helper()
