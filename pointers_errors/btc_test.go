@@ -1,4 +1,4 @@
-package pointerserrors
+package pointers_errors
 
 import (
 	"fmt"
@@ -6,17 +6,19 @@ import (
 )
 
 func TestWallet(t *testing.T) {
-	wallet := Wallet{}
+	t.Run("depocit", func(t *testing.T) {
+		wallet := Wallet{}
 
-	wallet.Deposit(Bitcoin(10))
+		wallet.Deposit(Bitcoin(10))
 
-	got := wallet.Balance()
+		got := wallet.Balance()
 
-	fmt.Printf("address balance %p\n", &wallet.balance)
+		fmt.Printf("address balance %p\n", &wallet.balance)
 
-	want := Bitcoin(10)
-	if got != want {
-		t.Errorf("got %d want %s", got, want)
-	}
+		want := Bitcoin(10)
+		if got != want {
+			t.Errorf("got %d want %s", got, want)
+		}
+	})
 
 }

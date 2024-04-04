@@ -1,4 +1,4 @@
-package pointerserrors
+package pointers_errors
 
 import "fmt"
 
