@@ -1,6 +1,9 @@
 package maps
 
-import "testing"
+import (
+	"alnoor/gotdd/utils"
+	"testing"
+)
 
 func TestSearch(t *testing.T) {
 	t.Run("known word", func(t *testing.T) {
@@ -22,6 +25,7 @@ func TestSearch(t *testing.T) {
 			t.Fatal("expected to get error")
 		}
 
+		utils.AssertError(t, err, NotFoundOnDectionary)
 		assertStrings(t, err.Error(), NotFoundOnDectionary.Error())
 	})
 }
