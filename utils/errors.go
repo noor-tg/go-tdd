@@ -3,6 +3,7 @@ package utils
 import "testing"
 
 func AssertError(t testing.TB, got, want error) {
+	t.Helper()
 	if got == nil {
 		// panic to stop test
 		t.Fatal("did not get an error but wanted one")

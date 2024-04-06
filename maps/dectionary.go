@@ -41,3 +41,17 @@ func (d Dectionary) Add(word string, definition string) error {
 	// no error if code execute here
 	return nil
 }
+
+func (d Dectionary) Update(word, definition string) error {
+	_, err := d.Search(word)
+
+	if err == nil {
+		d[word] = definition
+	}
+
+	return err
+}
+
+func (d Dectionary) Delete(word string) {
+	delete(d, word)
+}
