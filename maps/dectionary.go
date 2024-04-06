@@ -1,13 +1,17 @@
 package maps
 
-import (
-	"errors"
-)
-
 type Dectionary map[string]string
+type DectionaryErr string
 
-var NotFoundOnDectionary = errors.New("word Not Found in dectionary")
-var WordAlreadyExist = errors.New("word already exist in dectionary")
+// implement error interface by making Error method
+func (e DectionaryErr) Error() string {
+	return string(e)
+}
+
+const (
+	NotFoundOnDectionary = DectionaryErr("word Not Found in dectionary")
+	WordAlreadyExist     = DectionaryErr("word already exist in dectionary")
+)
 
 func (d Dectionary) Search(word string) (string, error) {
 	definition, ok := d[word]

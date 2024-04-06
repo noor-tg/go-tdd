@@ -44,7 +44,6 @@ func TestAdd(t *testing.T) {
 		assertDefinition(t, dectionary, "test", want)
 		utils.AssertError(t, err, WordAlreadyExist)
 	})
-
 }
 
 func assertDefinition(t testing.TB, dectionary Dectionary, word, want string) {
