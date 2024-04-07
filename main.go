@@ -1,10 +1,10 @@
 package main
 
 import (
-	"alnoor/gotdd/hello"
-	"fmt"
+	"alnoor/gotdd/dep_inject"
 )
 
 func main() {
-	fmt.Println(hello.Hello("noor", "spanish"))
+	dep_inject.Terminal()
+	dep_inject.Web()
 }
