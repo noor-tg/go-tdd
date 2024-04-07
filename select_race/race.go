@@ -2,24 +2,33 @@ package select_race
 
 import (
 	"net/http"
-	"time"
 )
 
 func Racer(a, b string) string {
-	aDuration := measureResponseTime(a)
-	bDuration := measureResponseTime(b)
-
-	if aDuration < bDuration {
+	// select between channels responses
+	select {
+	// case when ping with a url return it
+	case <-ping(a):
 		return a
+	// case when ping with b url return it
+	case <-ping(b):
+		return b
 	}
-
-	return b
 }
 
-func measureResponseTime(url string) time.Duration {
-	startA := time.Now()
-	http.Get(url)
-	aDuration := time.Since(startA)
+func ping(url string) chan struct{} {
+	// make new channel that return empty struct
+	// empty struct will not allocate any memory
+	// use make so there will not be runtime error if channel value not checked
+	ch := make(chan struct{})
 
-	return aDuration
+	// call closure as goroutine
+	go func() {
+		http.Get(url)
+		// close channel after http request finish
+		close(ch)
+	}()
+
+	// return the channel value
+	return ch
 }
