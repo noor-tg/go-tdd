@@ -6,13 +6,26 @@ import (
 	"time"
 )
 
+// interface for contract between countdown and outside timer
+type Sleeper interface {
+	Sleep()
+}
+
+// generic sleeper
+type DefaultSleeper struct{}
+
+// implement sleeper based on time module
+func (d *DefaultSleeper) Sleep() {
+	time.Sleep(1 * time.Second)
+}
+
 const startCounter = 3
 const finalWord = "Go!"
 
-func Countdown(w io.Writer) {
+func Countdown(w io.Writer, sleeper Sleeper) {
 	for i := startCounter; i > 0; i-- {
 		fmt.Fprintln(w, i)
-		time.Sleep(1 * time.Second)
+		sleeper.Sleep()
 	}
 	fmt.Fprint(w, finalWord)
 }
