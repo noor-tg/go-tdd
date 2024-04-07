@@ -1,10 +1,16 @@
 package main
 
 import (
-	"alnoor/gotdd/dep_inject"
+	"alnoor/gotdd/mocking"
+	"os"
 )
 
+// for dep_inject
+// func main() {
+// 	dep_inject.Terminal()
+// 	dep_inject.Web()
+// }
+
 func main() {
-	dep_inject.Terminal()
-	dep_inject.Web()
+	mocking.Countdown(os.Stdout)
 }
