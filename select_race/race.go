@@ -4,6 +4,11 @@ import (
 	"net/http"
 )
 
+// Requirement
+// 1. send http request to 2 urls
+// 2. when any of request return response return it
+// 3. if no response return after 10 seconds throw error
+
 func Racer(a, b string) string {
 	// select between channels responses
 	select {
