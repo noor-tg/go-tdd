@@ -1,7 +1,9 @@
 package select_race
 
 import (
+	"fmt"
 	"net/http"
+	"time"
 )
 
 // Requirement
@@ -9,15 +11,21 @@ import (
 // 2. when any of request return response return it
 // 3. if no response return after 10 seconds throw error
 
-func Racer(a, b string) string {
+func Racer(a, b string) (string, error) {
+	return ConfigurableRacer(a, b, 10*time.Second)
+}
+
+func ConfigurableRacer(a, b string, timeout time.Duration) (string, error) {
 	// select between channels responses
 	select {
 	// case when ping with a url return it
 	case <-ping(a):
-		return a
+		return a, nil
 	// case when ping with b url return it
 	case <-ping(b):
-		return b
+		return b, nil
+	case <-time.After(timeout):
+		return "", fmt.Errorf("timeout")
 	}
 }
 
