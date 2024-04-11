@@ -58,18 +58,15 @@ func TestServer(t *testing.T) {
 	t.Run("stop background process if request canceled by user", func(t *testing.T) {
 		data := "Hello, World"
 		store := SpyStore{data, false, t}
-		srv := Server(&store)
 
+		srv := Server(&store)
 		request := httptest.NewRequest(http.MethodGet, "/", nil)
 		cancelingCtx, cancel := context.WithCancel(request.Context())
 		time.AfterFunc(5*time.Millisecond, cancel)
 		request = request.WithContext(cancelingCtx)
-
 		response := httptest.NewRecorder()
-
 		srv.ServeHTTP(response, request)
 
-		if !store.canceled {
-		}
+		store.assertCanceled()
 	})
 }
