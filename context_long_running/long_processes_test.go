@@ -2,6 +2,8 @@ package context_long_running
 
 import (
 	"context"
+	"errors"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -10,37 +12,70 @@ import (
 
 type SpyStore struct {
 	response string
-	canceled bool
 	t        testing.TB
 }
 
-func (s *SpyStore) Fetch() string {
-	time.Sleep(100 * time.Millisecond)
-	return s.response
+// implement writer to simulate error handling .
+// this is not exist in httptest Recorder class
+
+type SpyResponseWriter struct {
+	written bool
 }
 
-func (s *SpyStore) Cancel() {
-	s.canceled = true
+func (s SpyResponseWriter) Header() http.Header {
+	s.written = true
+	return nil
 }
 
-func (s *SpyStore) assertNotCanceled() {
-	s.t.Helper()
-	if s.canceled {
-		s.t.Error("it should not have canceled the store")
+func (s SpyResponseWriter) Write([]byte) (int, error) {
+	s.written = true
+	return 0, errors.New("not implemented")
+}
+
+func (s SpyResponseWriter) WriteHeader(statusCode int) {
+	s.written = true
+}
+
+// the fetch method send error if context canceled
+func (s *SpyStore) Fetch(ctx context.Context) (string, error) {
+	// make channel for data
+	data := make(chan string, 1)
+
+	// start goroutine to semulate late response
+	go func() {
+		// to store response data string
+		var result string
+		// go throw response info
+		for _, c := range s.response {
+			select {
+			// if there is ctx done channel response return
+			case <-ctx.Done():
+				// print message
+				log.Println("spy store got canceled")
+				return
+			default:
+				// sleep 10 ms and add char from response
+				time.Sleep(10 * time.Millisecond)
+				result += string(c)
+			}
+		}
+		// send result to data channel
+		data <- result
+	}()
+	// to race between data sent or ctx cancel sent
+	select {
+	// if done sent return empty response and error
+	case <-ctx.Done():
+		return "", ctx.Err()
+		// if data sent return it with empty error
+	case res := <-data:
+		return res, nil
 	}
 }
-
-func (s *SpyStore) assertCanceled() {
-	s.t.Helper()
-	if !s.canceled {
-		s.t.Error("store was not told to cancel")
-	}
-}
-
 func TestServer(t *testing.T) {
 	t.Run("make request to store normally", func(t *testing.T) {
 		data := "Hello, World"
-		store := SpyStore{data, false, t}
+		store := SpyStore{data, t}
 		srv := Server(&store)
 
 		request := httptest.NewRequest(http.MethodGet, "/", nil)
@@ -51,22 +86,22 @@ func TestServer(t *testing.T) {
 		if response.Body.String() != data {
 			t.Errorf(`got "%s", want "%s"`, response.Body.String(), data)
 		}
-
-		store.assertNotCanceled()
 	})
 
 	t.Run("stop background process if request canceled by user", func(t *testing.T) {
 		data := "Hello, World"
-		store := SpyStore{data, false, t}
+		store := SpyStore{data, t}
 
 		srv := Server(&store)
 		request := httptest.NewRequest(http.MethodGet, "/", nil)
-		cancelingCtx, cancel := context.WithCancel(request.Context())
-		time.AfterFunc(5*time.Millisecond, cancel)
-		request = request.WithContext(cancelingCtx)
-		response := httptest.NewRecorder()
+		cancellingCtx, cancel := context.WithCancel(request.Context())
+		time.AfterFunc(5*time.Microsecond, cancel)
+		request = request.WithContext(cancellingCtx)
+		response := &SpyResponseWriter{}
 		srv.ServeHTTP(response, request)
 
-		store.assertCanceled()
+		if response.written {
+			t.Error("a response should not have been written")
+		}
 	})
 }
