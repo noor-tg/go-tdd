@@ -2,11 +2,13 @@ package pbt
 
 import (
 	"fmt"
+	"log"
 	"testing"
+	"testing/quick"
 )
 
 var testCases = []struct {
-	arabic int
+	arabic ConvertibleArabic
 	roman  string
 }{
 	{
@@ -145,22 +147,16 @@ var testCases = []struct {
 		arabic: 1993,
 		roman:  "MCMXCIII",
 	},
-	{
-		arabic: 4680,
-		roman:  "MMMMDCLXXX",
-	},
-	{
-		arabic: 10000,
-		roman:  "MMMMMMMMMM",
-	},
 }
 
 func TestRomanNumerals(t *testing.T) {
 	for _, tC := range testCases {
 		t.Run(fmt.Sprintf("%v converted to %v\n", tC.arabic, tC.roman), func(t *testing.T) {
-			got := ConvertToRoman(tC.arabic)
+			got, err := ConvertToRoman(tC.arabic)
 
-			if got != tC.roman {
+			if err != nil {
+				t.Error(err)
+			} else if got != tC.roman {
 				t.Errorf("got %v want %v", got, tC.roman)
 			}
 		})
@@ -170,9 +166,11 @@ func TestRomanNumerals(t *testing.T) {
 func TestToArabic(t *testing.T) {
 	for _, tC := range testCases {
 		t.Run(fmt.Sprintf("%v convert to %v", tC.roman, tC.arabic), func(t *testing.T) {
-			got := ConvertToArabic(tC.roman)
+			got, err := ConvertToArabic(tC.roman)
 
-			if got != tC.arabic {
+			if err != nil {
+				t.Error(err)
+			} else if got != tC.arabic {
 				t.Errorf("got %v, want %v", got, tC.arabic)
 			}
 		})
@@ -180,17 +178,35 @@ func TestToArabic(t *testing.T) {
 
 }
 
+func TestPropertiesOfConversion(t *testing.T) {
+	assertion := func(arabic ConvertibleArabic) bool {
+		if arabic < 0 || arabic > 3999 {
+			log.Println(arabic)
+			return true
+		}
+		roman, _ := ConvertToRoman(arabic)
+		fromRoman, _ := ConvertToArabic(roman)
+
+		return fromRoman == arabic
+	}
+
+	if err := quick.Check(assertion, nil); err != nil {
+		t.Error("assertion failed", err)
+	}
+
+}
+
 func ExampleRomanNumberFifty() {
-	arabic := 50
-	got := ConvertToRoman(arabic)
+	var arabic ConvertibleArabic = 50
+	got, _ := ConvertToRoman(arabic)
 
 	fmt.Printf("arabic = %d , roman = %q", arabic, got)
 	//Output:
 	// arabic = 50 , roman = "L"
 }
 func ExampleRomanNumberFortyNine() {
-	arabic := 49
-	got := ConvertToRoman(arabic)
+	var arabic ConvertibleArabic = 49
+	got, _ := ConvertToRoman(arabic)
 
 	fmt.Printf("arabic = %d , roman = %q", arabic, got)
 	//Output:

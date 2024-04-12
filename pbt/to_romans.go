@@ -1,11 +1,16 @@
 package pbt
 
-import "strings"
+import (
+	"errors"
+	"strings"
+)
 
 type RomanNumeral struct {
-	Value  int
+	Value  ConvertibleArabic
 	Symbol string
 }
+
+type ConvertibleArabic uint16
 
 // roman numbers based on symbol
 var AllRomanNumerals = []RomanNumeral{
@@ -24,7 +29,10 @@ var AllRomanNumerals = []RomanNumeral{
 	{1, "I"},
 }
 
-func ConvertToRoman(number int) string {
+func ConvertToRoman(number ConvertibleArabic) (string, error) {
+	if number > 3999 {
+		return "I", errors.New("can not convert number larger than 3999")
+	}
 	var result strings.Builder
 	// iterate throw roman numbers
 	for _, numeral := range AllRomanNumerals {
@@ -36,11 +44,11 @@ func ConvertToRoman(number int) string {
 			number -= numeral.Value
 		}
 	}
-	return result.String()
+	return result.String(), nil
 }
 
-func ConvertToArabic(roman string) int {
-	arabic := 0
+func ConvertToArabic(roman string) (ConvertibleArabic, error) {
+	var arabic ConvertibleArabic
 	for _, numeral := range AllRomanNumerals {
 		// if my current number is equal or larger than this number
 		for strings.HasPrefix(roman, numeral.Symbol) {
@@ -49,5 +57,9 @@ func ConvertToArabic(roman string) int {
 		}
 	}
 
-	return arabic
+	if arabic > 3999 {
+		return 1, errors.New("converting number larger than 3999 is in-correct")
+	}
+
+	return arabic, nil
 }
