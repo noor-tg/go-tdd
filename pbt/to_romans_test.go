@@ -5,166 +5,179 @@ import (
 	"testing"
 )
 
+var testCases = []struct {
+	arabic int
+	roman  string
+}{
+	{
+		arabic: 1,
+		roman:  "I",
+	},
+	{
+		arabic: 2,
+		roman:  "II",
+	},
+	{
+		arabic: 3,
+		roman:  "III",
+	},
+	{
+		arabic: 4,
+		roman:  "IV",
+	},
+	{
+		arabic: 5,
+		roman:  "V",
+	},
+	{
+		arabic: 6,
+		roman:  "VI",
+	},
+	{
+		arabic: 7,
+		roman:  "VII",
+	},
+	{
+		arabic: 8,
+		roman:  "VIII",
+	},
+	{
+		arabic: 9,
+		roman:  "IX",
+	},
+	{
+		arabic: 10,
+		roman:  "X",
+	},
+	{
+		arabic: 11,
+		roman:  "XI",
+	},
+	{
+		arabic: 12,
+		roman:  "XII",
+	},
+	{
+		arabic: 13,
+		roman:  "XIII",
+	},
+	{
+		arabic: 14,
+		roman:  "XIV",
+	},
+	{
+		arabic: 15,
+		roman:  "XV",
+	},
+	{
+		arabic: 16,
+		roman:  "XVI",
+	},
+	{
+		arabic: 17,
+		roman:  "XVII",
+	},
+	{
+		arabic: 18,
+		roman:  "XVIII",
+	},
+	{
+		arabic: 19,
+		roman:  "XIX",
+	},
+	{
+		arabic: 20,
+		roman:  "XX",
+	},
+	{
+		arabic: 29,
+		roman:  "XXIX",
+	},
+	{
+		arabic: 30,
+		roman:  "XXX",
+	},
+	{
+		arabic: 39,
+		roman:  "XXXIX",
+	},
+	{
+		arabic: 47,
+		roman:  "XLVII",
+	},
+	{
+		arabic: 40,
+		roman:  "XL",
+	},
+	{
+		arabic: 50,
+		roman:  "L",
+	},
+	{
+		arabic: 99,
+		roman:  "XCIX",
+	},
+	{
+		arabic: 100,
+		roman:  "C",
+	},
+	{
+		arabic: 129,
+		roman:  "CXXIX",
+	},
+	{
+		arabic: 150,
+		roman:  "CL",
+	},
+	{
+		arabic: 498,
+		roman:  "CDXCVIII",
+	},
+	{
+		arabic: 500,
+		roman:  "D",
+	},
+	{
+		arabic: 1984,
+		roman:  "MCMLXXXIV",
+	},
+	{
+		arabic: 1993,
+		roman:  "MCMXCIII",
+	},
+	{
+		arabic: 4680,
+		roman:  "MMMMDCLXXX",
+	},
+	{
+		arabic: 10000,
+		roman:  "MMMMMMMMMM",
+	},
+}
+
 func TestRomanNumerals(t *testing.T) {
-	testCases := []struct {
-		input int
-		want  string
-	}{
-		{
-			input: 1,
-			want:  "I",
-		},
-		{
-			input: 2,
-			want:  "II",
-		},
-		{
-			input: 3,
-			want:  "III",
-		},
-		{
-			input: 4,
-			want:  "IV",
-		},
-		{
-			input: 5,
-			want:  "V",
-		},
-		{
-			input: 6,
-			want:  "VI",
-		},
-		{
-			input: 7,
-			want:  "VII",
-		},
-		{
-			input: 8,
-			want:  "VIII",
-		},
-		{
-			input: 9,
-			want:  "IX",
-		},
-		{
-			input: 10,
-			want:  "X",
-		},
-		{
-			input: 11,
-			want:  "XI",
-		},
-		{
-			input: 12,
-			want:  "XII",
-		},
-		{
-			input: 13,
-			want:  "XIII",
-		},
-		{
-			input: 14,
-			want:  "XIV",
-		},
-		{
-			input: 15,
-			want:  "XV",
-		},
-		{
-			input: 16,
-			want:  "XVI",
-		},
-		{
-			input: 17,
-			want:  "XVII",
-		},
-		{
-			input: 18,
-			want:  "XVIII",
-		},
-		{
-			input: 19,
-			want:  "XIX",
-		},
-		{
-			input: 20,
-			want:  "XX",
-		},
-		{
-			input: 29,
-			want:  "XXIX",
-		},
-		{
-			input: 30,
-			want:  "XXX",
-		},
-		{
-			input: 39,
-			want:  "XXXIX",
-		},
-		{
-			input: 47,
-			want:  "XLVII",
-		},
-		{
-			input: 40,
-			want:  "XL",
-		},
-		{
-			input: 50,
-			want:  "L",
-		},
-		{
-			input: 99,
-			want:  "XCIX",
-		},
-		{
-			input: 100,
-			want:  "C",
-		},
-		{
-			input: 129,
-			want:  "CXXIX",
-		},
-		{
-			input: 150,
-			want:  "CL",
-		},
-		{
-			input: 498,
-			want:  "CDXCVIII",
-		},
-		{
-			input: 500,
-			want:  "D",
-		},
-		{
-			input: 1984,
-			want:  "MCMLXXXIV",
-		},
-		{
-			input: 1993,
-			want:  "MCMXCIII",
-		},
-		{
-			input: 4680,
-			want:  "MMMMDCLXXX",
-		},
-		{
-			input: 10000,
-			want:  "MMMMMMMMMM",
-		},
-	}
 	for _, tC := range testCases {
-		t.Run(fmt.Sprintf("%d converted to %q\n", tC.input, tC.want), func(t *testing.T) {
+		t.Run(fmt.Sprintf("%v converted to %v\n", tC.arabic, tC.roman), func(t *testing.T) {
+			got := ConvertToRoman(tC.arabic)
 
-			got := ConvertToRoman(tC.input)
-
-			if got != tC.want {
-				t.Errorf("got %q want %q", got, tC.want)
+			if got != tC.roman {
+				t.Errorf("got %v want %v", got, tC.roman)
 			}
 		})
 	}
+}
+
+func TestToArabic(t *testing.T) {
+	for _, tC := range testCases {
+		t.Run(fmt.Sprintf("%v convert to %v", tC.roman, tC.arabic), func(t *testing.T) {
+			got := ConvertToArabic(tC.roman)
+
+			if got != tC.arabic {
+				t.Errorf("got %v, want %v", got, tC.arabic)
+			}
+		})
+	}
+
 }
 
 func ExampleRomanNumberFifty() {

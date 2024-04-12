@@ -38,3 +38,16 @@ func ConvertToRoman(number int) string {
 	}
 	return result.String()
 }
+
+func ConvertToArabic(roman string) int {
+	arabic := 0
+	for _, numeral := range AllRomanNumerals {
+		// if my current number is equal or larger than this number
+		for strings.HasPrefix(roman, numeral.Symbol) {
+			arabic += numeral.Value
+			roman = strings.TrimPrefix(roman, numeral.Symbol)
+		}
+	}
+
+	return arabic
+}
