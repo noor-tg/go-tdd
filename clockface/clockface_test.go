@@ -1,7 +1,7 @@
-package a_math_test
+package clockface_test
 
 import (
-	"alnoor/gotdd/a_math"
+	"alnoor/gotdd/clockface"
 	"fmt"
 	"math"
 	"testing"
@@ -11,8 +11,8 @@ import (
 func TestSecondHandAt30Seconds(t *testing.T) {
 	tm := time.Date(1337, time.January, 1, 0, 0, 30, 0, time.UTC)
 
-	want := a_math.Point{X: 150, Y: 150 + 90}
-	got := a_math.SecondHand(tm)
+	want := clockface.Point{X: 150, Y: 150 + 90}
+	got := clockface.SecondHand(tm)
 
 	if got != want {
 		t.Errorf("Got %v, wanted %v", got, want)
@@ -22,14 +22,14 @@ func TestSecondHandAt30Seconds(t *testing.T) {
 func TestSocondHandPoint(t *testing.T) {
 	testCases := []struct {
 		time  time.Time
-		point a_math.Point
+		point clockface.Point
 	}{
-		{simpleTime(0, 0, 30), a_math.Point{0, -1}},
-		{simpleTime(0, 0, 45), a_math.Point{-1, 0}},
+		{simpleTime(0, 0, 30), clockface.Point{0, -1}},
+		{simpleTime(0, 0, 45), clockface.Point{-1, 0}},
 	}
 	for _, tC := range testCases {
 		t.Run(fmt.Sprintf("convert time %v to Point %v", tC.time, tC.point), func(t *testing.T) {
-			got := a_math.SecondHandPoint(tC.time)
+			got := clockface.SecondHandPoint(tC.time)
 
 			// floating point is not accurate in minimum values
 			// so check for roughlyEqual value
@@ -41,7 +41,7 @@ func TestSocondHandPoint(t *testing.T) {
 
 }
 
-func roughlyEqualPoint(a, b a_math.Point) bool {
+func roughlyEqualPoint(a, b clockface.Point) bool {
 	return roughlyEqualFloat64(a.X, b.X) && roughlyEqualFloat64(a.Y, b.Y)
 }
 
@@ -52,9 +52,9 @@ func roughlyEqualFloat64(a, b float64) bool {
 
 // func TestSecondHandAt30Seconds(t *testing.T) {
 // 	tm := time.Date(1337, time.January, 1, 0, 0, 30, 0, time.UTC)
-// 	want := a_math.Point{150, 150 + 90}
+// 	want := clockface.Point{150, 150 + 90}
 
-// 	got := a_math.SecondHand(tm)
+// 	got := clockface.SecondHand(tm)
 
 // 	if got != want {
 // 		t.Errorf("Got %v, Want %v", got, want)
@@ -74,7 +74,7 @@ func TestSecondsInRadians(t *testing.T) {
 	}
 	for _, tC := range testCases {
 		t.Run(fmt.Sprintf("convert seconds %v to angle %v", tC.time, tC.angle), func(t *testing.T) {
-			got := a_math.SecondsInRadians(tC.time)
+			got := clockface.SecondsInRadians(tC.time)
 
 			if got != tC.angle {
 				t.Fatalf("Wanted %v, Got %v", tC.angle, got)
