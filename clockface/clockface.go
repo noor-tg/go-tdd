@@ -10,6 +10,7 @@ type Point struct {
 	Y float64
 }
 
+const minutesLineLength = 80
 const secondsLineLength = 90
 const clockCenterX = 150
 const clockCenterY = 150
@@ -25,8 +26,26 @@ func SecondHand(tm time.Time) Point {
 	return p
 }
 
+func MinuteHand(tm time.Time) Point {
+	p := MinuteHandPoint(tm)
+	// scale :: to line length
+	p = Point{p.X * minutesLineLength, p.Y * minutesLineLength}
+	// flip
+	p = Point{p.X, -p.Y}
+	// translate: to make point coordinates start from center of clock
+	p = Point{p.X + clockCenterX, p.Y + clockCenterY}
+	return p
+}
+
 func SecondHandPoint(time time.Time) Point {
-	angle := SecondsInRadians(time)
+	return angleToPoint(SecondsInRadians(time))
+}
+
+func MinuteHandPoint(time time.Time) Point {
+	return angleToPoint(MinutesInRadians(time))
+}
+
+func angleToPoint(angle float64) Point {
 	x := math.Sin(angle)
 	y := math.Cos(angle)
 

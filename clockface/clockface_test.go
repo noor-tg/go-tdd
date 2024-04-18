@@ -41,6 +41,27 @@ func TestSocondHandPoint(t *testing.T) {
 
 }
 
+func TestMinuteHandPoint(t *testing.T) {
+	testCases := []struct {
+		time  time.Time
+		point clockface.Point
+	}{
+		{simpleTime(0, 30, 0), clockface.Point{0, -1}},
+		{simpleTime(0, 45, 0), clockface.Point{-1, 0}},
+	}
+	for _, tC := range testCases {
+		t.Run(fmt.Sprintf("convert time %v to Point %v", tC.time, tC.point), func(t *testing.T) {
+			got := clockface.MinuteHandPoint(tC.time)
+
+			// floating point is not accurate in minimum values
+			// so check for roughlyEqual value
+			if !roughlyEqualPoint(got, tC.point) {
+				t.Fatalf("Got %v, Want %v", got, tC.point)
+			}
+		})
+	}
+
+}
 func roughlyEqualPoint(a, b clockface.Point) bool {
 	return roughlyEqualFloat64(a.X, b.X) && roughlyEqualFloat64(a.Y, b.Y)
 }
