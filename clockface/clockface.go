@@ -15,34 +15,16 @@ const secondsLineLength = 90
 const clockCenterX = 150
 const clockCenterY = 150
 
-func SecondHand(tm time.Time) Point {
-	p := SecondHandPoint(tm)
-	// scale :: to line length
-	p = Point{p.X * secondsLineLength, p.Y * secondsLineLength}
-	// flip
-	p = Point{p.X, -p.Y}
-	// translate: to make point coordinates start from center of clock
-	p = Point{p.X + clockCenterX, p.Y + clockCenterY}
-	return p
-}
-
-func MinuteHand(tm time.Time) Point {
-	p := MinuteHandPoint(tm)
-	// scale :: to line length
-	p = Point{p.X * minutesLineLength, p.Y * minutesLineLength}
-	// flip
-	p = Point{p.X, -p.Y}
-	// translate: to make point coordinates start from center of clock
-	p = Point{p.X + clockCenterX, p.Y + clockCenterY}
-	return p
-}
-
 func SecondHandPoint(time time.Time) Point {
 	return angleToPoint(SecondsInRadians(time))
 }
 
 func MinuteHandPoint(time time.Time) Point {
 	return angleToPoint(MinutesInRadians(time))
+}
+
+func HourHandPoint(time time.Time) Point {
+	return angleToPoint(HoursInRadians(time))
 }
 
 func angleToPoint(angle float64) Point {
@@ -58,4 +40,8 @@ func SecondsInRadians(time time.Time) float64 {
 
 func MinutesInRadians(t time.Time) float64 {
 	return (SecondsInRadians(t) / 60) + (math.Pi / (30 / float64(t.Minute())))
+}
+
+func HoursInRadians(t time.Time) float64 {
+	return (MinutesInRadians(t) / 12) + (math.Pi / (6 / float64(t.Hour()%12)))
 }

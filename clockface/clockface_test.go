@@ -8,17 +8,6 @@ import (
 	"time"
 )
 
-func TestSecondHandAt30Seconds(t *testing.T) {
-	tm := time.Date(1337, time.January, 1, 0, 0, 30, 0, time.UTC)
-
-	want := clockface.Point{X: 150, Y: 150 + 90}
-	got := clockface.SecondHand(tm)
-
-	if got != want {
-		t.Errorf("Got %v, wanted %v", got, want)
-	}
-}
-
 func TestSocondHandPoint(t *testing.T) {
 	testCases := []struct {
 		time  time.Time
@@ -62,6 +51,28 @@ func TestMinuteHandPoint(t *testing.T) {
 	}
 
 }
+func TestHourHandPoint(t *testing.T) {
+	testCases := []struct {
+		time  time.Time
+		point clockface.Point
+	}{
+		{simpleTime(6, 0, 0), clockface.Point{0, -1}},
+		{simpleTime(21, 0, 0), clockface.Point{-1, 0}},
+	}
+	for _, tC := range testCases {
+		t.Run(fmt.Sprintf("convert time %v to Point %v", tC.time, tC.point), func(t *testing.T) {
+			got := clockface.HourHandPoint(tC.time)
+
+			// floating point is not accurate in minimum values
+			// so check for roughlyEqual value
+			if !roughlyEqualPoint(got, tC.point) {
+				t.Fatalf("Got %v, Want %v", got, tC.point)
+			}
+		})
+	}
+
+}
+
 func roughlyEqualPoint(a, b clockface.Point) bool {
 	return roughlyEqualFloat64(a.X, b.X) && roughlyEqualFloat64(a.Y, b.Y)
 }
@@ -123,6 +134,27 @@ func TestMinutesInRadians(t *testing.T) {
 
 			if got != tC.angle {
 				t.Fatalf("Wanted %v, Got %v", tC.angle, got)
+			}
+		})
+	}
+}
+
+func TestHoursInRadians(t *testing.T) {
+	cases := []struct {
+		time  time.Time
+		angle float64
+	}{
+		{simpleTime(6, 0, 0), math.Pi},
+		{simpleTime(0, 0, 0), 0},
+		{simpleTime(21, 0, 0), math.Pi * 1.5},
+		{simpleTime(0, 1, 30), math.Pi / ((6 * 60 * 60) / 90)},
+	}
+
+	for _, tC := range cases {
+		t.Run(fmt.Sprintf("convert hours %v to angle %v", tC.time, tC.angle), func(t *testing.T) {
+			got := clockface.HoursInRadians(tC.time)
+			if !roughlyEqualFloat64(got, tC.angle) {
+				t.Fatalf("Wanted %v radians, but got %v", tC.angle, got)
 			}
 		})
 	}
