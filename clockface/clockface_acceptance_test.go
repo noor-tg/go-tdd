@@ -33,7 +33,7 @@ type Circle struct {
 	R  float64 `xml:"r,attr"`
 }
 
-func TestSVGWriterAtMidnight(t *testing.T) {
+func TestSVGWriterForSeconds(t *testing.T) {
 	testCases := []struct {
 		time time.Time
 		line Line
