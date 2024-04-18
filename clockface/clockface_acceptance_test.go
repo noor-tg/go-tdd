@@ -4,6 +4,7 @@ import (
 	"alnoor/gotdd/clockface"
 	"bytes"
 	"encoding/xml"
+	"fmt"
 	"testing"
 	"time"
 )
@@ -33,21 +34,40 @@ type Circle struct {
 }
 
 func TestSVGWriterAtMidnight(t *testing.T) {
-	tm := time.Date(1337, time.January, 1, 0, 0, 0, 0, time.UTC)
+	testCases := []struct {
+		time time.Time
+		line Line
+	}{
+		{
+			simpleTime(0, 0, 0),
+			Line{150, 150, 150, 60},
+		},
+		{
+			simpleTime(0, 0, 30),
+			Line{150, 150, 150, 240},
+		},
+	}
+	for _, tC := range testCases {
+		t.Run(fmt.Sprintf("check seconds line for %v to output %v", tC.time, tC.line), func(t *testing.T) {
+			b := bytes.Buffer{}
+			clockface.SVGWriter(&b, tC.time)
 
-	b := bytes.Buffer{}
-	clockface.SVGWriter(&b, tm)
+			svg := SVG{}
+			xml.Unmarshal(b.Bytes(), &svg)
 
-	svg := SVG{}
-	xml.Unmarshal(b.Bytes(), &svg)
+			if !containsLine(svg, tC.line) {
+				t.Errorf("Expected to find the second hand with %+v, in the SVG output %v", tC.line, b.String())
+			}
 
-	want := Line{150, 150, 150, 60}
+		})
+	}
+}
 
+func containsLine(svg SVG, caseLine Line) bool {
 	for _, line := range svg.Line {
-		if line == want {
-			return
+		if line == caseLine {
+			return true
 		}
 	}
-
-	t.Errorf("Expected to find the second hand with x2 of %+v and y2 of %+v, in the SVG output %v", want.X2, want.Y2, b.String())
+	return false
 }
