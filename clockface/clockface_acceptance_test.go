@@ -33,7 +33,7 @@ type Circle struct {
 	R  float64 `xml:"r,attr"`
 }
 
-func TestSVGWriterForSeconds(t *testing.T) {
+func TestSVGWriterForSecondsHand(t *testing.T) {
 	testCases := []struct {
 		time time.Time
 		line Line
@@ -62,6 +62,32 @@ func TestSVGWriterForSeconds(t *testing.T) {
 		})
 	}
 }
+
+// func TestSVGWriterForMinutesHand(t *testing.T) {
+// 	testCases := []struct {
+// 		time time.Time
+// 		line Line
+// 	}{
+// 		{
+// 			simpleTime(0, 0, 0),
+// 			Line{150, 150, 150, 70},
+// 		},
+// 	}
+// 	for _, tC := range testCases {
+// 		t.Run(fmt.Sprintf("check seconds line for %v to output %v", tC.time, tC.line), func(t *testing.T) {
+// 			b := bytes.Buffer{}
+// 			clockface.SVGWriter(&b, tC.time)
+
+// 			svg := SVG{}
+// 			xml.Unmarshal(b.Bytes(), &svg)
+
+// 			if !containsLine(svg, tC.line) {
+// 				t.Errorf("Expected to find the second hand with %+v, in the SVG output %v", tC.line, b.String())
+// 			}
+
+// 		})
+// 	}
+// }
 
 func containsLine(svg SVG, caseLine Line) bool {
 	for _, line := range svg.Line {

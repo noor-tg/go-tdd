@@ -87,3 +87,22 @@ func TestSecondsInRadians(t *testing.T) {
 func simpleTime(i1, i2, i3 int) time.Time {
 	return time.Date(312, time.October, 28, i1, i2, i3, 0, time.UTC)
 }
+
+func TestMinutesInRadians(t *testing.T) {
+	testCases := []struct {
+		time  time.Time
+		angle float64
+	}{
+		{simpleTime(0, 30, 0), math.Pi},
+		{simpleTime(0, 0, 7), 7 * (math.Pi / (30 * 60))},
+	}
+	for _, tC := range testCases {
+		t.Run(fmt.Sprintf("convert seconds %v to angle %v", tC.time, tC.angle), func(t *testing.T) {
+			got := clockface.MinutesInRadians(tC.time)
+
+			if got != tC.angle {
+				t.Fatalf("Wanted %v, Got %v", tC.angle, got)
+			}
+		})
+	}
+}
