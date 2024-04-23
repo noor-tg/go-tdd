@@ -1,4 +1,4 @@
-package generics_test
+package generics
 
 import "testing"
 
@@ -25,5 +25,18 @@ func AssertEqual[T comparable](t *testing.T, i1, i2 T) {
 	t.Helper()
 	if i1 != i2 {
 		t.Errorf("i1 %+v, i2 %+v", i1, i2)
+	}
+}
+func AssertTrue(t *testing.T, got bool) {
+	t.Helper()
+	if !got {
+		t.Errorf("got %v", got)
+	}
+}
+
+func AssertFalse(t *testing.T, got bool) {
+	t.Helper()
+	if got {
+		t.Errorf("got %v", got)
 	}
 }
