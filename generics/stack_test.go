@@ -4,7 +4,7 @@ import "testing"
 
 func TestStack(t *testing.T) {
 	t.Run("integer stack", func(t *testing.T) {
-		stack := new(StackOfInts)
+		stack := new(Stack[int])
 
 		AssertTrue(t, stack.IsEmpty())
 
@@ -23,7 +23,7 @@ func TestStack(t *testing.T) {
 	})
 
 	t.Run("strings stack", func(t *testing.T) {
-		stack := new(StackOfStrings)
+		stack := new(Stack[string])
 
 		AssertTrue(t, stack.IsEmpty())
 
