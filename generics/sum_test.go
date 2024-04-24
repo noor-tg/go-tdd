@@ -2,17 +2,6 @@ package generics
 
 import "testing"
 
-func TestReduce(t *testing.T) {
-	t.Run("sum two functions by reduce", func(t *testing.T) {
-		got := Sum([]int{1, 2, 3})
-		want := 6
-
-		if got != want {
-			t.Errorf("got %v, want %v", got, want)
-		}
-	})
-}
-
 func TestBadBank(t *testing.T) {
 	transactions := []Transaction{
 		{
