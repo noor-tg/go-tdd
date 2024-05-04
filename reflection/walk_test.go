@@ -132,45 +132,63 @@ func walk(x interface{}, fn func(input string)) {
 	val := getValue(x)
 
 	numberOfValues := 0
+	// function which get int return reflect value
 	var getField func(int) reflect.Value
 
+	// switch throw value kind
 	switch val.Kind() {
 	case reflect.String:
 		fn(val.String())
+	// can use multiple types with switch case by ,
 	case reflect.Slice, reflect.Array:
 		numberOfValues = val.Len()
+		// set function
 		getField = val.Index
 	case reflect.Struct:
 		numberOfValues = val.NumField()
 		getField = val.Field
+		//maps need special handling because it only get by key and it is not ordered
 	case reflect.Map:
+		// get map keys
 		for _, key := range val.MapKeys() {
+			// get value by key
 			walk(val.MapIndex(key).Interface(), fn)
 		}
+	// channels need custom fetch
 	case reflect.Chan:
+		// loop infinitely
 		for {
+			// for each value received if it ok wall throw it
 			if v, ok := val.Recv(); ok {
 				walk(v.Interface(), fn)
 			} else {
+				// break out of loop if not receive any
 				break
 			}
 		}
+	// handle function type
 	case reflect.Func:
+		// call function with nil
 		result := val.Call(nil)
+		// iterate throw result values
 		for _, res := range result {
 			walk(res.Interface(), fn)
 		}
 	}
 
 	for i := 0; i < numberOfValues; i++ {
+		// use numberof value + getfield method to walk throw values
 		walk(getField(i).Interface(), fn)
 	}
 }
 
 func getValue(x interface{}) reflect.Value {
+	// get value of interface
 	val := reflect.ValueOf(x)
 
+	// check if kind of value is pointer
 	if val.Kind() == reflect.Pointer {
+		// return value of pointer
 		val = val.Elem()
 	}
 
