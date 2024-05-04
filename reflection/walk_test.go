@@ -7,6 +7,14 @@ import (
 
 func TestWalk(t *testing.T) {
 
+	type Profile struct {
+		City string
+		Age  int
+	}
+	type Person struct {
+		Name    string
+		Profile Profile
+	}
 	cases := []struct {
 		Name          string
 		Input         interface{}
@@ -33,6 +41,11 @@ func TestWalk(t *testing.T) {
 			}{"Alnoor", 10},
 			ExpectedCalls: []string{"Alnoor"},
 		},
+		{
+			Name:          "struct with nested structs",
+			Input:         Person{"Alnoor", Profile{"Cairo", 10}},
+			ExpectedCalls: []string{"Alnoor", "Cairo"},
+		},
 	}
 
 	for _, test := range cases {
@@ -54,8 +67,12 @@ func walk(x interface{}, fn func(input string)) {
 	val := reflect.ValueOf(x)
 	for i := 0; i < val.NumField(); i++ {
 		field := val.Field(i)
+
 		if field.Kind() == reflect.String {
 			fn(field.String())
+		}
+		if field.Kind() == reflect.Struct {
+			walk(field.Interface(), fn)
 		}
 	}
 
