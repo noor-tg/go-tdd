@@ -45,6 +45,10 @@ func TestWalk(t *testing.T) {
 			Name:          "struct with nested structs",
 			Input:         Person{"Alnoor", Profile{"Cairo", 10}},
 			ExpectedCalls: []string{"Alnoor", "Cairo"},
+		}, {
+			Name:          "struct with nested structs as pointer",
+			Input:         &Person{"Alnoor", Profile{"Cairo", 10}},
+			ExpectedCalls: []string{"Alnoor", "Cairo"},
 		},
 	}
 
@@ -65,6 +69,11 @@ func TestWalk(t *testing.T) {
 
 func walk(x interface{}, fn func(input string)) {
 	val := reflect.ValueOf(x)
+
+	if val.Kind() == reflect.Pointer {
+		val = val.Elem()
+	}
+
 	for i := 0; i < val.NumField(); i++ {
 		field := val.Field(i)
 
