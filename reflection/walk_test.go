@@ -15,6 +15,11 @@ func TestWalk(t *testing.T) {
 		Profile Profile
 	}
 
+	type Developer struct {
+		Person
+		Skills []string
+	}
+
 	cases := []struct {
 		Name          string
 		Input         interface{}
@@ -50,6 +55,11 @@ func TestWalk(t *testing.T) {
 			Input:         &Person{"Alnoor", Profile{"Cairo", 10}},
 			ExpectedCalls: []string{"Alnoor", "Cairo"},
 		},
+		{
+			Name:          "slices contain strings",
+			Input:         []Profile{{"Cairo", 10}, {"Khartoum", 5}},
+			ExpectedCalls: []string{"Cairo", "Khartoum"},
+		},
 	}
 
 	for _, test := range cases {
@@ -69,6 +79,14 @@ func TestWalk(t *testing.T) {
 
 func walk(x interface{}, fn func(input string)) {
 	val := getValue(x)
+
+	if val.Kind() == reflect.Slice {
+		for i := 0; i < val.Len(); i++ {
+			walk(val.Index(i).Interface(), fn)
+
+		}
+		return
+	}
 
 	for i := 0; i < val.NumField(); i++ {
 		field := val.Field(i)
