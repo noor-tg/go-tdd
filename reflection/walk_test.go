@@ -60,6 +60,11 @@ func TestWalk(t *testing.T) {
 			Input:         []Profile{{"Cairo", 10}, {"Khartoum", 5}},
 			ExpectedCalls: []string{"Cairo", "Khartoum"},
 		},
+		{
+			Name:          "arrays contain strings",
+			Input:         [2]Profile{{"Cairo", 10}, {"Khartoum", 5}},
+			ExpectedCalls: []string{"Cairo", "Khartoum"},
+		},
 	}
 
 	for _, test := range cases {
@@ -84,7 +89,7 @@ func walk(x interface{}, fn func(input string)) {
 	var getField func(int) reflect.Value
 
 	switch val.Kind() {
-	case reflect.Slice:
+	case reflect.Slice, reflect.Array:
 		numberOfValues = val.Len()
 		getField = val.Index
 	case reflect.Struct:
