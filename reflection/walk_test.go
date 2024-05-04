@@ -65,11 +65,6 @@ func TestWalk(t *testing.T) {
 			Input:         [2]Profile{{"Cairo", 10}, {"Khartoum", 5}},
 			ExpectedCalls: []string{"Cairo", "Khartoum"},
 		},
-		{
-			Name:          "maps contain strings",
-			Input:         map[string]string{"city": "Cairo", "kind": "male"},
-			ExpectedCalls: []string{"Cairo", "male"},
-		},
 	}
 
 	for _, test := range cases {
@@ -85,6 +80,37 @@ func TestWalk(t *testing.T) {
 			}
 		})
 	}
+	t.Run("walk with maps", func(t *testing.T) {
+		var got []string
+
+		input := map[string]string{"city": "Cairo", "kind": "male"}
+
+		walk(input, func(input string) {
+			got = append(got, input)
+		})
+
+		assertContains(t, "Cairo", got)
+		assertContains(t, "male", got)
+	})
+	t.Run("walk with channels", func(t *testing.T) {
+		chnl := make(chan Profile)
+
+		go func() {
+			chnl <- Profile{"Khartoum", 10}
+			chnl <- Profile{"Cairo", 5}
+			close(chnl)
+		}()
+		var got []string
+		want := []string{"Khartoum", "Cairo"}
+
+		walk(chnl, func(input string) {
+			got = append(got, input)
+		})
+
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("got %v, expected %v", got, want)
+		}
+	})
 }
 
 func walk(x interface{}, fn func(input string)) {
@@ -106,6 +132,14 @@ func walk(x interface{}, fn func(input string)) {
 		for _, key := range val.MapKeys() {
 			walk(val.MapIndex(key).Interface(), fn)
 		}
+	case reflect.Chan:
+		for {
+			if v, ok := val.Recv(); ok {
+				walk(v.Interface(), fn)
+			} else {
+				break
+			}
+		}
 	}
 
 	for i := 0; i < numberOfValues; i++ {
@@ -121,4 +155,19 @@ func getValue(x interface{}) reflect.Value {
 	}
 
 	return val
+}
+
+func assertContains(t testing.TB, needle string, heystacke []string) {
+	t.Helper()
+	contains := false
+
+	for _, val := range heystacke {
+		if needle == val {
+			contains = true
+		}
+	}
+
+	if !contains {
+		t.Errorf("map %+v not contain %q", heystacke, needle)
+	}
 }
